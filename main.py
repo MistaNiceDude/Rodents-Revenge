@@ -25,10 +25,9 @@ WOOD_2 = pygame.image.load(os.path.join("/Users/rodneythompson/PycharmProjects/R
 WOOD_3 = pygame.image.load(os.path.join("/Users/rodneythompson/PycharmProjects/Rodents_revenge/Sprites/tiles/wood_3.png"))
 WOOD_4 = pygame.image.load(os.path.join("/Users/rodneythompson/PycharmProjects/Rodents_revenge/Sprites/tiles/wood_4.png"))
 
-
+keys = [False, False, False, False]
 wood = [WOOD_1, WOOD_2, WOOD_3, WOOD_4]
 #wood = WOOD_1
-
 
 class Block:
     def __init__(self,x,y):
@@ -52,8 +51,6 @@ class Block:
     def collision(self, obj):
         return collide(self, obj)
 
-
-
 class Rat:
     def __init__(self, x, y, hits = 1):
         self.x = x
@@ -62,26 +59,14 @@ class Rat:
         self.rat_img = RAT
         self.mask = pygame.mask.from_surface(self.rat_img)
         self.angle = 0
-        rat_box = pygame.Rect(self.x, self.y, self.get_width(), self.get_height())
+        self.rect = self.rat_img.get_rect()
+        self.vel = 7
+
         #self.hitbox = (self.x, self.y, self.get_width(),self.get_height())
 
 
     def get_width(self):
         return self.rat_img.get_width()
-
-    def update(self):
-        keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_a]:
-            pygame.transform.rotate(self.rat_img, 90)
-        #elif keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH:
-            #player.x += player_vel
-        #elif keys[pygame.K_w] and player.y - player_vel > 0:
-            #player.y -= player_vel
-        #elif keys[pygame.K_s] and player.y + player_vel + player.get_height() < HEIGHT:
-            #player.y += player_vel
-
-    #def rotate(self, angle):
-        #return pygame.transform.rotate(self.rat_img, angle)
 
     def get_height(self):
         return self.rat_img.get_height()
@@ -94,6 +79,15 @@ class Rat:
     def collision(self, obj):
         return collide(self, obj)
 
+    def rotate(self, angle):
+        pygame.transform.rotate(self.rat_img, angle)
+
+  # def update(self):
+  #      self.image = pygame.transform.rotate(self.rat_img, self.angle)
+  #      self.angle += 1 % 360
+  #      x, y = self.rect
+  #      self.rect = self.rat_img_rect()
+  #      self.rect.center = (x.y)
 
 
 
@@ -114,6 +108,7 @@ def main():
     player = Rat(WIDTH/2, HEIGHT/2)
     wood = Block(WIDTH/4,HEIGHT/4)
     clock_font= pygame.font.SysFont("impact", 20)
+    player_pos = (player.x, player. y)
 
     def redraw_window():
         WIN.blit(BG, (0,0))
@@ -154,7 +149,11 @@ def main():
 
 #changing if to elif constrains to one direction
         keys = pygame.key.get_pressed()
+
         if keys[pygame.K_a] and player.x - player_vel > 0:
+            #player.update()
+
+            pygame.transform.rotate(player.rat_img, 90)
             player.x -= player_vel
         elif keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH:
             player.x += player_vel
@@ -163,10 +162,7 @@ def main():
         elif keys[pygame.K_s] and player.y + player_vel + player.get_height() < HEIGHT:
             player.y += player_vel
 
-
 main()
-
-
 
 pygame.quit()
 
