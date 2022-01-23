@@ -15,15 +15,15 @@ WIN = pygame.display.set_mode((WIDTH,HEIGHT))
 pygame.display.set_caption("Rodents Rebooted")
 
 RAT = pygame.transform.scale(pygame.image.load
-                             (os.path.join("/Users/rodneythompson/PycharmProjects/Rodents_revenge/Sprites/rat/rat_1.png")),(WIDTH/14, HEIGHT/12))
+                             (os.path.join("./Sprites/rat/rat_1.png")),(WIDTH/14, HEIGHT/12))
 BG = pygame.transform.scale(pygame.image.load
-                            (os.path.join("/Users/rodneythompson/PycharmProjects/Rodents_revenge/Sprites/tiles/grass_1.png")), (WIDTH, HEIGHT))
-CAT = pygame.image.load(os.path.join("/Users/rodneythompson/PycharmProjects/Rodents_revenge/Sprites/cat/cat_1.png"))
+                            (os.path.join("./Sprites/tiles/grass_1.png")), (WIDTH, HEIGHT))
+CAT = pygame.image.load(os.path.join("./Sprites/cat/cat_1.png"))
 WOOD_1 = pygame.transform.scale(pygame.image.load
-                            (os.path.join("/Users/rodneythompson/PycharmProjects/Rodents_revenge/Sprites/tiles/wood_1.png")), (WIDTH/14, HEIGHT/12))
-WOOD_2 = pygame.image.load(os.path.join("/Users/rodneythompson/PycharmProjects/Rodents_revenge/Sprites/tiles/wood_2.png"))
-WOOD_3 = pygame.image.load(os.path.join("/Users/rodneythompson/PycharmProjects/Rodents_revenge/Sprites/tiles/wood_3.png"))
-WOOD_4 = pygame.image.load(os.path.join("/Users/rodneythompson/PycharmProjects/Rodents_revenge/Sprites/tiles/wood_4.png"))
+                            (os.path.join("./Sprites/tiles/wood_1.png")), (WIDTH/14, HEIGHT/12))
+WOOD_2 = pygame.image.load(os.path.join("./Sprites/tiles/wood_2.png"))
+WOOD_3 = pygame.image.load(os.path.join("./Sprites/tiles/wood_3.png"))
+WOOD_4 = pygame.image.load(os.path.join("./Sprites/tiles/wood_4.png"))
 
 
 wood = [WOOD_1, WOOD_2, WOOD_3, WOOD_4]
