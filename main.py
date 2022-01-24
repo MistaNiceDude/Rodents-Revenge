@@ -25,9 +25,12 @@ WOOD_2 = pygame.transform.scale(pygame.image.load(os.path.join("./Sprites/tiles/
 WOOD_3 = pygame.transform.scale(pygame.image.load(os.path.join("./Sprites/tiles/wood_3.png")), (WIDTH/14, HEIGHT/12))
 WOOD_4 = pygame.transform.scale(pygame.image.load(os.path.join("./Sprites/tiles/wood_4.png")), (WIDTH/14, HEIGHT/12))
 
-keys = [False, False, False, False]
 wood = [WOOD_1, WOOD_2, WOOD_3, WOOD_4]
 #wood = WOOD_1
+LEFT_COLLIDE = 0
+RIGHT_COLLIDE = 1
+TOP_COLLIDE = 2
+BOTTOM_COLLIDE = 3
 
 class Block:
     wood = [WOOD_1, WOOD_2, WOOD_3, WOOD_4]
@@ -37,12 +40,16 @@ class Block:
         self.block_img = wood[random.randint(0,3)]
         self.mask = pygame.mask.from_surface(self.block_img)
         block_box = pygame.Rect(self.x, self.y, self.get_width(), self.get_height())
+        self.can_move = False
 
     def get_width(self):
         return self.block_img.get_width()
 
     def get_height(self):
         return self.block_img.get_height()
+     
+    def get_rect(self):
+        return self.block_img.get_rect()
 
     def draw(self,window):
         window.blit(self.block_img, (self.x, self.y))
@@ -60,6 +67,7 @@ class Block:
     def collision(self, obj):
         return collide(self, obj)
 
+    
 class Rat:
     def __init__(self, x, y, hits = 1):
         self.x = x
@@ -69,6 +77,7 @@ class Rat:
         self.mask = pygame.mask.from_surface(self.rat_img)
         self.rect = self.rat_img.get_rect()
         self.vel = 7
+        self.angle = 0 
 
         #self.hitbox = (self.x, self.y, self.get_width(),self.get_height())
 
@@ -79,6 +88,10 @@ class Rat:
     def get_height(self):
         return self.rat_img.get_height()
 
+    def get_rect(self):
+        return self.rat_img.get_rect()
+        
+
     def draw(self,window):
         window.blit(self.rat_img, (self.x, self.y))
         self.hitbox = (self.x, self.y, self.get_width(), self.get_height())
@@ -88,8 +101,26 @@ class Rat:
         return collide(self, obj)
 
     def rotate(self, angle):
-        rot_img = pygame.transform.rotate(self.rat_img, angle)
-        return rot_img
+        if self.angle != angle:
+            act_angle = angle - self.angle
+            self.angle = angle
+            self.rat_img = pygame.transform.rotate(self.rat_img, act_angle)
+
+    def collide_dir(self, surface: pygame.Surface):
+        print(self.get_rect().midright)
+        rect = surface.get_rect()
+        if self.rat_img.get_rect().collidepoint(rect.midright):
+            return LEFT_COLLIDE
+        elif self.rat_img.get_rect().collidepoint(rect.midtop):
+            return BOTTOM_COLLIDE
+        elif self.rat_img.get_rect().collidepoint(rect.midbottom):
+            return TOP_COLLIDE
+        elif self.rat_img.get_rect().collidepoint(rect.midleft):
+            return RIGHT_COLLIDE
+        else:
+            return 4
+
+        
 
   # def update(self):
   #      self.image = pygame.transform.rotate(self.rat_img, self.angle)
@@ -107,7 +138,7 @@ def collide(obj1,obj2):
 
 def main():
     run = True
-    FPS = 50
+    FPS = 60
     hits = 3
     level = 0
     hits_font = pygame.font.SysFont("comicsans", 30)
@@ -123,7 +154,7 @@ def main():
         WIN.blit(BG, (0,0))
         player.draw(WIN)
        # wood.draw(WIN)
-        wood.draw_grid(WIN)
+        wood.draw(WIN)
         hits_label = hits_font.render(f"Hits: {hits}", 1, (149,11,9))
         level_label = level_font.render(f"Level: {level}", 1, (149,11,9))
         clock_label = clock_font.render(f"FPS: {clock}", 1, (149,11, 9))
@@ -146,30 +177,37 @@ def main():
                 main()
         collision = collide(player, wood)
         if collision == True:
-            if player.y > wood.y + wood.get_height()/2 - 10:
+            if player.y > wood.y + wood.get_height()/2 - 10 and wood.y > 0:
                 wood.y -= player_vel
-            elif player.y < wood.y - wood.get_height()/2 + 10:
+            elif player.y < wood.y - wood.get_height()/2 + 10 and  wood.y + wood.get_height() < HEIGHT:
                 wood.y += player_vel
-            elif player.x > wood.x + wood.get_width()/2 + 10:
+            elif player.x > wood.x + wood.get_width()/2 + 10 and wood.x > 0:
                 wood.x -= player_vel
-            elif player.x < wood.x - wood.get_width()/2 - 10:
+            elif player.x < wood.x - wood.get_width()/2 - 10 and wood.x + wood.get_width() < WIDTH:
                 wood.x += player_vel
 
 
 
 #changing if to elif constrains to one direction
         keys = pygame.key.get_pressed()
-
         if keys[pygame.K_a] and player.x - player_vel > 0:
-            #player.update()
             Rat.rotate(player, 90)
-            #pygame.transform.rotate(player.rat_img, 90)
+            current_pos = player.x
             player.x -= player_vel
+            #if player.collide_dir(wood) == LEFT_COLLIDE:
+                #player.x = current_pos
+                
         elif keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH:
+            Rat.rotate(player, 270)
+            current_pos = player.x
             player.x += player_vel
+            #if player.collide_dir(wood) == RIGHT_COLLIDE:
+                #player.x = current_pos
         elif keys[pygame.K_w] and player.y - player_vel > 0:
+            Rat.rotate(player, 0)
             player.y -= player_vel
         elif keys[pygame.K_s] and player.y + player_vel + player.get_height() < HEIGHT:
+            Rat.rotate(player, 180)
             player.y += player_vel
 
 main()
