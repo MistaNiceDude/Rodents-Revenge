@@ -56,16 +56,22 @@ class Block:
         self.hitbox = (self.x, self.y, self.get_width(), self.get_height())
         #pygame.draw.rect(WIN, (255, 0, 0), self.hitbox, 2)  # temp hitbox
 
-    def draw_grid(self, window):
-        imgs = []
-        for i in range(4):
-            img = wood[random.randint(0,3)]
-            imgs.append(img)
-            for i in range(9):
-                window.blit(img, (self.x, self.y))
 
     def collision(self, obj):
         return collide(self, obj)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     
 class Rat:
@@ -97,6 +103,7 @@ class Rat:
         self.hitbox = (self.x, self.y, self.get_width(), self.get_height())
         #pygame.draw.rect(WIN,(255,0,0),self.hitbox, 2) #temp hitbox
 
+
     def collision(self, obj):
         return collide(self, obj)
 
@@ -107,7 +114,7 @@ class Rat:
             self.rat_img = pygame.transform.rotate(self.rat_img, act_angle)
 
     def collide_dir(self, surface: pygame.Surface):
-        print(self.get_rect().midright)
+
         rect = surface.get_rect()
         if self.rat_img.get_rect().collidepoint(rect.midright):
             return LEFT_COLLIDE
@@ -136,6 +143,19 @@ def collide(obj1,obj2):
     offset_y = (obj2.y + 2) - obj1.y
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
 
+
+
+
+
+
+def draw_grid(window):
+    wood = Block(WIDTH/4,HEIGHT/4)
+    GAP = 3
+    wood.draw(WIN)
+    for i in range(9):
+        window.blit(wood.block_img, (wood.x + wood.get_width() + GAP, wood.y))
+    def collision(self, obj):
+        return collide(self, obj)
 def main():
     run = True
     FPS = 60
@@ -156,10 +176,9 @@ def main():
         WIN.fill(0)
         WIN.blit(BG, (0,0))
         player.rect = player.rect.move(1, 0)
-        print(player.rect)
         player.draw(WIN)
-       # wood.draw(WIN)
-        wood.draw(WIN)
+        #wood.draw(WIN)
+        draw_grid(WIN)
         #pygame.draw.rect(WIN, pygame.color.Color(200, 0, 0), player.rect)
         hits_label = hits_font.render(f"Hits: {hits}", 1, (149,11,9))
         level_label = level_font.render(f"Level: {level}", 1, (149,11,9))
