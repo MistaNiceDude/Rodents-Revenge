@@ -52,9 +52,11 @@ class Block:
         return self.block_img.get_rect()
 
     def draw(self,window):
-        window.blit(self.block_img, (self.x, self.y))
+        GAP = 3
+        WIN.blit(self.block_img, (self.x, self.y))
         self.hitbox = (self.x, self.y, self.get_width(), self.get_height())
         #pygame.draw.rect(WIN, (255, 0, 0), self.hitbox, 2)  # temp hitbox
+
 
 
     def collision(self, obj):
@@ -104,6 +106,7 @@ class Rat:
         #pygame.draw.rect(WIN,(255,0,0),self.hitbox, 2) #temp hitbox
 
 
+
     def collision(self, obj):
         return collide(self, obj)
 
@@ -145,17 +148,21 @@ def collide(obj1,obj2):
 
 
 
-
-
-
-def draw_grid(window):
-    wood = Block(WIDTH/4,HEIGHT/4)
+def draw_grid(img, size):
     GAP = 3
-    wood.draw(WIN)
     for i in range(9):
-        window.blit(wood.block_img, (wood.x + wood.get_width() + GAP, wood.y))
+        WIN.blit(img.block_img, (img.x + img.get_width() + GAP, img.y))
+
+        
     def collision(self, obj):
         return collide(self, obj)
+
+
+
+
+
+
+
 def main():
     run = True
     FPS = 60
@@ -177,8 +184,10 @@ def main():
         WIN.blit(BG, (0,0))
         player.rect = player.rect.move(1, 0)
         player.draw(WIN)
-        #wood.draw(WIN)
-        draw_grid(WIN)
+        wood.draw(WIN)
+        draw_grid(wood)
+
+        
         #pygame.draw.rect(WIN, pygame.color.Color(200, 0, 0), player.rect)
         hits_label = hits_font.render(f"Hits: {hits}", 1, (149,11,9))
         level_label = level_font.render(f"Level: {level}", 1, (149,11,9))
